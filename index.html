@@ -129,4 +129,153 @@
     });
   </script>
 </body>
+</html><!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DİO Tibb App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 15px;
+      color: #333;
+    }
+    .header { text-align: center; padding: 10px 0; }
+    .header h1 { margin: 0; font-size: 22px; color: #0088cc; }
+    
+    /* Tab Menyu */
+    .tabs { display: flex; gap: 5px; margin-top: 15px; }
+    .tab-btn {
+      flex: 1; padding: 10px; background: #cbd5e0; border: none;
+      border-radius: 8px 8px 0 0; font-weight: bold; cursor: pointer; color: #2d3748;
+    }
+    .tab-btn.active { background: #ffffff; color: #0088cc; border-bottom: 2px solid #0088cc; }
+
+    .card {
+      background: #ffffff; border-radius: 0 0 12px 12px; padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Çat */
+    .chat-box {
+      height: 200px; overflow-y: auto; border: 1px solid #e2e8f0;
+      padding: 10px; border-radius: 8px; background: #f7fafc; margin-bottom: 10px;
+    }
+    .message { margin-bottom: 8px; font-size: 13px; word-break: break-word; }
+    .message .sender { font-weight: bold; color: #2b6cb0; }
+    .input-group { display: flex; gap: 5px; }
+    .input-group input { flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; outline: none; }
+    .input-group button { background: #0088cc; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; }
+
+    /* Məllumat kartları */
+    .info-item { background: #f7fafc; border-left: 4px solid #0088cc; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+    .info-item h4 { margin: 0 0 5px 0; color: #2b6cb0; }
+    .info-item p { margin: 0; font-size: 13px; color: #4a5568; line-height: 1.4; }
+    .emergency { border-left-color: #e53e3e; }
+
+    button.exit-btn {
+      width: 100%; background: #e53e3e; color: white; border: none;
+      padding: 12px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>👨‍⚕️ DİO-TİBB Məsləhətxanası</h1>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab('chat')">💬 Çat</button>
+    <button class="tab-btn" onclick="openTab('firstaid')">🚨 İlkin Yardım</button>
+    <button class="tab-btn" onclick="openTab('articles')">📚 Dərslik</button>
+  </div>
+
+  <div class="card">
+    <div id="chat" class="tab-content active">
+      <div class="chat-box" id="chatBox">
+        <div class="message"><span class="sender">Sistem:</span> Xoş gəlmisiniz! Sual və şikayətlərinizi bura yaza bilərsiniz.</div>
+      </div>
+      <div class="input-group">
+        <input type="text" id="msgInput" placeholder="Mesajınızı yazın...">
+        <button onclick="sendMessage()">Göndər</button>
+      </div>
+    </div>
+
+    <div id="firstaid" class="tab-content">
+      <div class="info-item emergency">
+        <h4>🔥 Yüngül Yanıqlar</h4>
+        <p>Zədələnmiş nahiyəni dərhal 10-15 dəqiqə axar soyuq su altında saxlayın. Üzərinə yağ və ya diş məcunu yaxmayın!</p>
+      </div>
+      <div class="info-item emergency">
+        <h4>🩸 Burun Qanaması</h4>
+        <p>Başı geriyə YOX, yüngülcə irəliyə əyin. Burnu üst hissədən sıxaraq 5-10 dəqiqə gözləyin və alına soyuq dəsmal qoyun.</p>
+      </div>
+      <div class="info-item emergency">
+        <h4>🤒 Yüksək Qızdırma</h4>
+        <p>Xəstəyə bol maye verin, geyimlərini yüngülləşdirin və ilıq su ilə bədənini silin.</p>
+      </div>
+    </div>
+
+    <div id="articles" class="tab-content">
+      <div class="info-item">
+        <h4>💧 Düzgün Su Qəbulu</h4>
+        <p>Gün ərzində ortalama 1.5 - 2 litr su içmək maddələr mübadiləsini sürətləndirir və böyrək sağlamlığını qoruyur.</p>
+      </div>
+      <div class="info-item">
+        <h4>😴 Yuxu Rejiminin Əhəmiyyəti</h4>
+        <p>Hər gün 7-8 saat keyfiyyətli yuxu immunitet sistemini gücləndirir və stresi azaldır.</p>
+      </div>
+      <div class="info-item">
+        <h4>🥗 Sağlam Qidalanma</h4>
+        <p>Mövsümə uyğun təzə tərəvəz və meyvələrdən istifadə etmək bədənin vitamin balansı üçün vacibdir.</p>
+      </div>
+    </div>
+  </div>
+
+  <button class="exit-btn" onclick="Telegram.WebApp.close()">Tətbiqdən Çıx</button>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const userName = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Pasiyent";
+
+    function openTab(tabName) {
+      const contents = document.querySelectorAll('.tab-content');
+      const buttons = document.querySelectorAll('.tab-btn');
+      
+      contents.forEach(content => content.classList.remove('active'));
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('msgInput');
+      const text = input.value.trim();
+
+      if (text !== "") {
+        const chatBox = document.getElementById('chatBox');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message';
+        msgDiv.innerHTML = `<span class="sender">${userName}:</span> ${text}`;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        input.value = "";
+      }
+    }
+
+    document.getElementById('msgInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') sendMessage();
+    });
+  </script>
+</body>
 </html>
