@@ -25,3 +25,108 @@
     <button onclick="Telegram.WebApp.close()">Tətbiqdən Çıx</button>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DİO Tibb App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 15px;
+      color: #333;
+    }
+    .header { text-align: center; padding: 10px 0; }
+    .header h1 { margin: 0; font-size: 20px; color: #0088cc; }
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin-top: 15px;
+    }
+    .chat-box {
+      height: 250px;
+      overflow-y: auto;
+      border: 1px solid #e2e8f0;
+      padding: 10px;
+      border-radius: 8px;
+      background: #f7fafc;
+      margin-bottom: 10px;
+    }
+    .message { margin-bottom: 8px; font-size: 13px; word-break: break-word; }
+    .message .sender { font-weight: bold; color: #2b6cb0; }
+    .input-group { display: flex; gap: 5px; }
+    .input-group input {
+      flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; outline: none;
+    }
+    .input-group button {
+      background: #0088cc; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer;
+    }
+    button.exit-btn {
+      width: 100%; background: #e53e3e; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: bold; margin-top: 15px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>👨‍⚕️ DİO-TİBB Məsləhətxanası</h1>
+  </div>
+
+  <div class="card">
+    <h3>💬 Pasiyent və Mütəxəssis Çatı</h3>
+    <div class="chat-box" id="chatBox">
+      <div class="message"><span class="sender">Sistem:</span> Xoş gəlmisiniz! Şikayət və mənəvi/fiziki suallarınızı bura yaza bilərsiniz.</div>
+    </div>
+    <div class="input-group">
+      <input type="text" id="msgInput" placeholder="Mesajınızı yazın...">
+      <button onclick="sendMessage()">Göndər</button>
+    </div>
+  </div>
+
+  <button class="exit-btn" onclick="Telegram.WebApp.close()">Tətbiqdən Çıx</button>
+
+  <script>
+    // Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    // İstifadəçi məlumatları (Telegram profilindən avtomatik götürülür)
+    const userName = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Qonaq";
+
+    function sendMessage() {
+      const input = document.getElementById('msgInput');
+      const text = input.value.trim();
+
+      if (text !== "") {
+        const chatBox = document.getElementById('chatBox');
+        
+        // Ekrana yeni mesajı əlavə etmək
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message';
+        msgDiv.innerHTML = `<span class="sender">${userName}:</span> ${text}`;
+        chatBox.appendChild(msgDiv);
+        
+        // Səhifəni aşağı sürüşdürmək
+        chatBox.scrollTop = chatBox.scrollHeight;
+        
+        input.value = "";
+      }
+    }
+
+    // Enter düyməsinə basıldıqda mesajı göndərmək
+    document.getElementById('msgInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
