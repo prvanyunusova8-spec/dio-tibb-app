@@ -31,12 +31,13 @@
     .tab-content.active { display: block; }
 
     .chat-box {
-      height: 230px; overflow-y: auto; border: 1px solid #e2e8f0;
+      height: 240px; overflow-y: auto; border: 1px solid #e2e8f0;
       padding: 10px; border-radius: 8px; background: #f7fafc; margin-bottom: 10px;
     }
-    .message { margin-bottom: 8px; font-size: 13px; word-break: break-word; }
+    .message { margin-bottom: 8px; font-size: 13px; word-break: break-word; line-height: 1.4; }
     .message .sender { font-weight: bold; color: #2b6cb0; }
     .message .ai { font-weight: bold; color: #38a169; }
+    .message .alert { color: #e53e3e; font-weight: bold; }
     
     .input-group { display: flex; gap: 5px; }
     .input-group input { flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; outline: none; }
@@ -46,8 +47,6 @@
     .info-item h4 { margin: 0 0 5px 0; color: #2b6cb0; }
     .info-item p { margin: 0; font-size: 13px; color: #4a5568; line-height: 1.4; }
     .emergency { border-left-color: #e53e3e; }
-
-    audio { width: 100%; margin-top: 8px; height: 32px; }
 
     button.exit-btn {
       width: 100%; background: #e53e3e; color: white; border: none;
@@ -70,10 +69,10 @@
   <div class="card">
     <div id="chat" class="tab-content active">
       <div class="chat-box" id="chatBox">
-        <div class="message"><span class="ai">DİO Həkim:</span> Xoş gəlmisiniz! Sual və şikayətlərinizi bura yaza bilərsiniz.</div>
+        <div class="message"><span class="ai">DİO Həkim:</span> Xoş gəlmisiniz! İstənilən tibbi şikayətinizi (ürək, baş, mədə, qızdırma və s.) bura yaza bilərsiniz.</div>
       </div>
       <div class="input-group">
-        <input type="text" id="msgInput" placeholder="Mesajınızı yazın...">
+        <input type="text" id="msgInput" placeholder="Şikayətinizi ətraflı yazın...">
         <button onclick="sendMessage()">Göndər</button>
       </div>
     </div>
@@ -85,7 +84,7 @@
       </div>
       <div class="info-item emergency">
         <h4>🩸 Burun Qanaması</h4>
-        <p>Başı geriyə YOX, yüngülcə irəliyə əyin. Burnu üst hissədən sıxaraq 5-10 dəqiqə gözləyin və alına soyuq dəsmal qoyun.</p>
+        <p>Başı geriyə YOX, yüngülcə irəliyə əyin. Burnu üst hissədən sıxaraq 5-10 dəqiqə gözləyin.</p>
       </div>
     </div>
 
@@ -93,10 +92,6 @@
       <div class="info-item">
         <h4>💧 Düzgün Su Qəbulu</h4>
         <p>Gün ərzində ortalama 1.5 - 2 litr su içmək maddələr mübadiləsini sürətləndirir və böyrək sağlamlığını qoruyur.</p>
-      </div>
-      <div class="info-item">
-        <h4>😴 Yuxu Rejimi</h4>
-        <p>Hər gün 7-8 saat keyfiyyətli yuxu immunitet sistemini gücləndirir.</p>
       </div>
     </div>
   </div>
@@ -120,21 +115,54 @@
       event.currentTarget.classList.add('active');
     }
 
+    // Genişləndirilmiş Tibbi Həkim Bazası
     function getAiResponse(text) {
       const lower = text.toLowerCase();
-      if (lower.includes("baş") && lower.includes("ağrı")) {
-        if (lower.includes("başqa") || lower.includes("səbəb") || lower.includes("nədən")) {
-          return "Baş ağrısı təzyiq dəyişməsi, göz yorğunluğu, susuzluq və ya təhlükəsiz miqren səbəbindən də ola bilər. Ağrı şiddətlənərsə həkimə müraciət edin.";
+
+      // ÜRƏK VƏ DÖŞ QƏFƏSİ
+      if (lower.includes("ürək") || lower.includes("ureym") || lower.includes("ureyim") || lower.includes("döş") || lower.includes("dos")) {
+        return "🚨 <span class='alert'>TƏCİLİ DİQQƏT:</span> Ürək və döş qəfəsi ağrısı ciddi ola bilər! Dərhal 103 Təcili Yardıma zəng edin. Sakit oturun, dərindən nəfəs alın, sıxıcı paltarları boşaldın və fiziki hərəkət etməyin.";
+      } 
+      
+      // BAŞ VƏ BAŞGİCƏLLƏNMƏ
+      else if (lower.includes("baş") || lower.includes("bas")) {
+        if (lower.includes("gicəllənmə") || lower.includes("fırlanır")) {
+          return "Başgicəllənmə qan təzyiqinin düşməsi, susuzluq və ya qan azlığı səbəbindən ola bilər. Uzanan və ayaqlarınızı bir az yuxarı qaldırın, bir stəkan su için.";
         }
-        return "Baş ağrısı daha çox stres, yorğunluq və ya susuzluqdan yaranır. İlıq su içib istirahət etməyi yoxlayın.";
-      } else if (lower.includes("salam")) {
-        return "Salam! Sizə necə kömək edə bilərəm?";
-      } else if (lower.includes("qızdırma") || lower.includes("hərarət")) {
-        return "Qızdırma zamanı bol maye qəbul edin və bədəninizi ilıq dəsmalla silin. 38.5-dən yüksək olarsa həkimə müraciət edin.";
-      } else if (lower.includes("öskürək") || lower.includes("boğaz")) {
-        return "İlıq çay və bal içmək boğazı rahatladır. Öskürək 3 gündən çox çəkərsə həkim müayinəsi vacibdir.";
-      } else {
-        return "Məlumatınız qeydə alındı. Şikayətiniz davam edərsə, dəqiq diaqnoz üçün mütəxəssis müayinəsi tövsiyə olunur.";
+        if (lower.includes("başqa") || lower.includes("səbəb") || lower.includes("nədən")) {
+          return "Baş ağrısı təzyiq dəyişikliyi, göz yorğunluğu, miqren və ya sinüs tıxanmasından yarana bilər. Şiddətlənərsə kardioloq və ya nevroloq müayinəsi vacibdir.";
+        }
+        return "Baş ağrısı daha çox stres, yorğunluq, yuxusuzluq və ya susuzluqdan olur. İlıq su içib qaranlıq otaqda 20 dəqiqə istirahət edin.";
+      } 
+      
+      // MƏDƏ VƏ QARIN
+      else if (lower.includes("mədə") || lower.includes("mede") || lower.includes("qarın") || lower.includes("qarin")) {
+        return "Mədə/qarın ağrısı qida qəbulu, qaz, qastrit və ya həzm çətinliyindən ola bilər. Yağlı və acı qidalardan uzaq durun, papatya və ya nanə çayı içib istirahət edin.";
+      }
+
+      // QIZDIRMA VƏ QRİP
+      else if (lower.includes("qızdırma") || lower.includes("qizdirma") || lower.includes("hərarət") || lower.includes("qrip")) {
+        return "Yüksək qızdırma zamanı bol maye (ilıq çay, su) içmək çox vacibdir. Geyimlərinizi yüngülləşdirin. 38.5°C-dən yuxarı olduqda hərarətsalıcı həb qəbul edə və ya həkimə müraciət edə bilərsiniz.";
+      }
+
+      // BOĞAZ VƏ ÖSKÜRƏK
+      else if (lower.includes("boğaz") || lower.includes("bogaz") || lower.includes("öskürək") || lower.includes("oskurek")) {
+        return "Boğaz ağrısı və öskürək üçün ilıq su, bal və limon qatılmış çaylar faydalıdır. Duzlu su ilə qarqara edin. 3 gündən çox davam etsə LOR həkiminə müraciət edin.";
+      }
+
+      // TƏZYİQ (Tazyig)
+      else if (lower.includes("təzyiq") || lower.includes("tezyiq")) {
+        return "Təzyiq dəyişməsi baş ağrısı və halsızlıq yaradır. Təzyiqinizi ölçün. Yüksəkdirsə duzlu qidalardan uzaq durun və sakitlikdə istirahət edin.";
+      }
+
+      // SALAMLAŞMA
+      else if (lower.includes("salam") || lower.includes("hər vaxtınız")) {
+        return "Salam! Mən DİO Tibb Həkimi proqramıyam. Hansı şikayətiniz var?";
+      } 
+
+      // ÜMUMİ CAVAB
+      else {
+        return "Məlumatınız qeydə alındı. Şikayətinizi daha ətraflı (məsələn: 'ürəyim ağrıyır', 'mədəm ağrıyır', 'qızdırmam var') yazsanız, daha dəqiq məsləhət verə bilərəm.";
       }
     }
 
