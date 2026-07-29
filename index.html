@@ -6,35 +6,20 @@
   <title>DİO Tibb App</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f4f8;
-      margin: 0;
-      padding: 15px;
-      color: #333;
-    }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; margin: 0; padding: 15px; color: #333; }
     .header { text-align: center; padding: 10px 0; }
     .header h1 { margin: 0; font-size: 20px; color: #0088cc; }
     
     .tabs { display: flex; gap: 5px; margin-top: 15px; }
-    .tab-btn {
-      flex: 1; padding: 10px; background: #cbd5e0; border: none;
-      border-radius: 8px 8px 0 0; font-weight: bold; cursor: pointer; color: #2d3748;
-    }
+    .tab-btn { flex: 1; padding: 10px; background: #cbd5e0; border: none; border-radius: 8px 8px 0 0; font-weight: bold; cursor: pointer; color: #2d3748; }
     .tab-btn.active { background: #ffffff; color: #0088cc; border-bottom: 2px solid #0088cc; }
 
-    .card {
-      background: #ffffff; border-radius: 0 0 12px 12px; padding: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;
-    }
+    .card { background: #ffffff; border-radius: 0 0 12px 12px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    .chat-box {
-      height: 240px; overflow-y: auto; border: 1px solid #e2e8f0;
-      padding: 10px; border-radius: 8px; background: #f7fafc; margin-bottom: 10px;
-    }
-    .message { margin-bottom: 8px; font-size: 13px; word-break: break-word; line-height: 1.4; }
+    .chat-box { height: 260px; overflow-y: auto; border: 1px solid #e2e8f0; padding: 10px; border-radius: 8px; background: #f7fafc; margin-bottom: 10px; }
+    .message { margin-bottom: 8px; font-size: 13px; line-height: 1.4; word-break: break-word; }
     .message .sender { font-weight: bold; color: #2b6cb0; }
     .message .ai { font-weight: bold; color: #38a169; }
     .message .alert { color: #e53e3e; font-weight: bold; }
@@ -44,14 +29,9 @@
     .input-group button { background: #0088cc; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
     .info-item { background: #f7fafc; border-left: 4px solid #0088cc; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
-    .info-item h4 { margin: 0 0 5px 0; color: #2b6cb0; }
-    .info-item p { margin: 0; font-size: 13px; color: #4a5568; line-height: 1.4; }
     .emergency { border-left-color: #e53e3e; }
 
-    button.exit-btn {
-      width: 100%; background: #e53e3e; color: white; border: none;
-      padding: 12px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer;
-    }
+    button.exit-btn { width: 100%; background: #e53e3e; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -69,10 +49,10 @@
   <div class="card">
     <div id="chat" class="tab-content active">
       <div class="chat-box" id="chatBox">
-        <div class="message"><span class="ai">DİO Həkim:</span> Xoş gəlmisiniz! İstənilən tibbi şikayətinizi (ürək, baş, mədə, qızdırma və s.) bura yaza bilərsiniz.</div>
+        <div class="message"><span class="ai">DİO Həkim:</span> Xoş gəlmisiniz! Sualınızı və ya haranızın ağrıdığını daxil edin.</div>
       </div>
       <div class="input-group">
-        <input type="text" id="msgInput" placeholder="Şikayətinizi ətraflı yazın...">
+        <input type="text" id="msgInput" placeholder="Şikayətinizi daxil edin...">
         <button onclick="sendMessage()">Göndər</button>
       </div>
     </div>
@@ -80,18 +60,18 @@
     <div id="firstaid" class="tab-content">
       <div class="info-item emergency">
         <h4>🔥 Yüngül Yanıqlar</h4>
-        <p>Zədələnmiş nahiyəni dərhal 10-15 dəqiqə axar soyuq su altında saxlayın. Üzərinə yağ və ya diş məcunu yaxmayın!</p>
+        <p>10-15 dəqiqə axar soyuq su altında saxlayın. Yağ sürtməyin!</p>
       </div>
       <div class="info-item emergency">
         <h4>🩸 Burun Qanaması</h4>
-        <p>Başı geriyə YOX, yüngülcə irəliyə əyin. Burnu üst hissədən sıxaraq 5-10 dəqiqə gözləyin.</p>
+        <p>Başı irəliyə əyin, burun pərələrini 5 dəqiqə sıxın.</p>
       </div>
     </div>
 
     <div id="articles" class="tab-content">
       <div class="info-item">
-        <h4>💧 Düzgün Su Qəbulu</h4>
-        <p>Gün ərzində ortalama 1.5 - 2 litr su içmək maddələr mübadiləsini sürətləndirir və böyrək sağlamlığını qoruyur.</p>
+        <h4>💧 Su Qəbulu</h4>
+        <p>Gün ərzində ortalama 1.5 - 2 litr su içmək vacibdir.</p>
       </div>
     </div>
   </div>
@@ -101,69 +81,80 @@
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-
     const userName = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Pasiyent";
 
-    function openTab(tabName, event) {
-      const contents = document.querySelectorAll('.tab-content');
-      const buttons = document.querySelectorAll('.tab-btn');
-      
-      contents.forEach(content => content.classList.remove('active'));
-      buttons.forEach(btn => btn.classList.remove('active'));
+    let lastTopic = ""; // Son mövzunu yadda saxlayır
 
+    function openTab(tabName, event) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.getElementById(tabName).classList.add('active');
       event.currentTarget.classList.add('active');
     }
 
-    // Genişləndirilmiş Tibbi Həkim Bazası
     function getAiResponse(text) {
       const lower = text.toLowerCase();
 
       // ÜRƏK VƏ DÖŞ QƏFƏSİ
-      if (lower.includes("ürək") || lower.includes("ureym") || lower.includes("ureyim") || lower.includes("döş") || lower.includes("dos")) {
-        return "🚨 <span class='alert'>TƏCİLİ DİQQƏT:</span> Ürək və döş qəfəsi ağrısı ciddi ola bilər! Dərhal 103 Təcili Yardıma zəng edin. Sakit oturun, dərindən nəfəs alın, sıxıcı paltarları boşaldın və fiziki hərəkət etməyin.";
-      } 
-      
-      // BAŞ VƏ BAŞGİCƏLLƏNMƏ
-      else if (lower.includes("baş") || lower.includes("bas")) {
-        if (lower.includes("gicəllənmə") || lower.includes("fırlanır")) {
-          return "Başgicəllənmə qan təzyiqinin düşməsi, susuzluq və ya qan azlığı səbəbindən ola bilər. Uzanan və ayaqlarınızı bir az yuxarı qaldırın, bir stəkan su için.";
-        }
+      if (lower.includes("ürək") || lower.includes("ureq") || lower.includes("urekim") || lower.includes("ureyim") || lower.includes("döş") || lower.includes("dos")) {
+        lastTopic = "ureq";
+        return "🚨 <span class='alert'>TƏCİLİ DİQQƏT:</span> Ürək və ya döş qəfəsi ağrısı təcili müayinə tələb edir! Dərhal 103 Təcili Yardım çağırın. Sakit oturun, dərindən nəfəs alın, sıxıcı paltarları boşaldın və tərpənməyin.";
+      }
+
+      // BAŞ AĞRISI
+      if (lower.includes("baş") || lower.includes("bas")) {
+        lastTopic = "bas";
         if (lower.includes("başqa") || lower.includes("səbəb") || lower.includes("nədən")) {
-          return "Baş ağrısı təzyiq dəyişikliyi, göz yorğunluğu, miqren və ya sinüs tıxanmasından yarana bilər. Şiddətlənərsə kardioloq və ya nevroloq müayinəsi vacibdir.";
+          return "Baş ağrısının digər səbəbləri: yüksək/aşağı arteriyal təzyiq, miqren, yuxusuzluq, göz yorğunluğu və ya orqanizmin susuz qalması ola bilər.";
         }
-        return "Baş ağrısı daha çox stres, yorğunluq, yuxusuzluq və ya susuzluqdan olur. İlıq su içib qaranlıq otaqda 20 dəqiqə istirahət edin.";
-      } 
-      
-      // MƏDƏ VƏ QARIN
-      else if (lower.includes("mədə") || lower.includes("mede") || lower.includes("qarın") || lower.includes("qarin")) {
-        return "Mədə/qarın ağrısı qida qəbulu, qaz, qastrit və ya həzm çətinliyindən ola bilər. Yağlı və acı qidalardan uzaq durun, papatya və ya nanə çayı içib istirahət edin.";
+        return "Baş ağrısı ən çox stres, gərginlik və ya susuzluqdan yaranır. İlıq su içib qaranlıq, sakit otaqda 20 dəqiqə istirahət edin.";
+      }
+
+      // MƏDƏ VƏ HƏZM
+      if (lower.includes("mədə") || lower.includes("mede") || lower.includes("qarın") || lower.includes("qarin") || lower.includes("bulanma")) {
+        lastTopic = "mede";
+        return "Mədə və qarın ağrısı qastrit, həzmsizlik, qaz və ya qida zəhərlənməsi ilə bağlı ola bilər. Yağlı qidalardan uzaq durun, ilıq papatya çayı içib istirahət edin.";
       }
 
       // QIZDIRMA VƏ QRİP
-      else if (lower.includes("qızdırma") || lower.includes("qizdirma") || lower.includes("hərarət") || lower.includes("qrip")) {
-        return "Yüksək qızdırma zamanı bol maye (ilıq çay, su) içmək çox vacibdir. Geyimlərinizi yüngülləşdirin. 38.5°C-dən yuxarı olduqda hərarətsalıcı həb qəbul edə və ya həkimə müraciət edə bilərsiniz.";
+      if (lower.includes("qızdırma") || lower.includes("qizdirma") || lower.includes("hərarət") || lower.includes("qrip") || lower.includes("soyuq dəymə")) {
+        lastTopic = "qizdirma";
+        return "Yüksək hərarət zamanı bol maye (ilıq su, çay) qəbul edin. Hərarət 38.5°C-dən yuxarı olarsa hərarətsalıcı vasitələrdən istifadə edin və həkimə bildirin.";
       }
 
       // BOĞAZ VƏ ÖSKÜRƏK
-      else if (lower.includes("boğaz") || lower.includes("bogaz") || lower.includes("öskürək") || lower.includes("oskurek")) {
-        return "Boğaz ağrısı və öskürək üçün ilıq su, bal və limon qatılmış çaylar faydalıdır. Duzlu su ilə qarqara edin. 3 gündən çox davam etsə LOR həkiminə müraciət edin.";
+      if (lower.includes("boğaz") || lower.includes("bogaz") || lower.includes("öskürək") || lower.includes("oskurek")) {
+        lastTopic = "bogaz";
+        return "Boğaz ağrısı və öskürək üçün ən yaxşı vasitə ilıq su, bal-limon qarışığı və duzlu su ilə qarqara etməkdir.";
       }
 
-      // TƏZYİQ (Tazyig)
-      else if (lower.includes("təzyiq") || lower.includes("tezyiq")) {
-        return "Təzyiq dəyişməsi baş ağrısı və halsızlıq yaradır. Təzyiqinizi ölçün. Yüksəkdirsə duzlu qidalardan uzaq durun və sakitlikdə istirahət edin.";
+      // BÖYRƏK VƏ BEL
+      if (lower.includes("böyrək") || lower.includes("boyrek") || lower.includes("bel")) {
+        lastTopic = "boyrek";
+        return "Böyrək və bel ağrıları soyuqdəymə, daş/qum və ya muscle gərginliyindən yarana bilər. Bol su için və beli isti saxlayın.";
+      }
+
+      // TƏZYİQ
+      if (lower.includes("təzyiq") || lower.includes("tezyiq")) {
+        lastTopic = "tezyiq";
+        return "Təzyiq dəyişməsi halsızlıq və baş ağrısı verir. Təzyiqinizi ölçün, dincəlin və duzlu qidalardan uzaq durun.";
+      }
+
+      // "BAŞQA" SÖZÜ YAZILDIQDA (Konteksti başa düşür)
+      if (lower.includes("başqa") || lower.includes("neden") || lower.includes("nədən")) {
+        if (lastTopic === "ureq") return "Ürək ağrısı nəinki stresdən, həm də damar tıxanması, təzyiq və ya mədə reflüksündən də qaynaqlana bilər. Müayinə vacibdir.";
+        if (lastTopic === "mede") return "Mədə ağrısının başqa səbəbləri: helikobakter infeksiyası, öd kisəsi problemləri və ya sinir gərginliyi ola bilər.";
+        if (lastTopic === "qizdirma") return "Qızdırma yalnız qripdən deyil, bədəndəki hər hansı bir gizli infeksiyadan da yarana bilər.";
+        return "Simptomların başqa səbəblərini öyrənmək üçün zəhmət olmasa hansı orqanınızın ağrıdığını dəqiq qeyd edin.";
       }
 
       // SALAMLAŞMA
-      else if (lower.includes("salam") || lower.includes("hər vaxtınız")) {
-        return "Salam! Mən DİO Tibb Həkimi proqramıyam. Hansı şikayətiniz var?";
-      } 
+      if (lower.includes("salam") || lower.includes("sagol") || lower.includes("çox sağ ol")) {
+        return "Salam! Sizə sağlamlıqla bağlı kömək etməkdən şadam. Başqa bir şikayətiniz var?";
+      }
 
       // ÜMUMİ CAVAB
-      else {
-        return "Məlumatınız qeydə alındı. Şikayətinizi daha ətraflı (məsələn: 'ürəyim ağrıyır', 'mədəm ağrıyır', 'qızdırmam var') yazsanız, daha dəqiq məsləhət verə bilərəm.";
-      }
+      return "Məlumat qeydə alındı. Dəqiq tibbi kömək üçün şikayətinizi (məsələn: 'ürəyim ağrıyır', 'mədəm ağrıyır', 'bəlim ağrıyır') yazın.";
     }
 
     function sendMessage() {
@@ -178,15 +169,13 @@
         userMsg.innerHTML = `<span class="sender">${userName}:</span> ${text}`;
         chatBox.appendChild(userMsg);
 
-        const replyText = getAiResponse(text);
-
         setTimeout(() => {
           const aiMsg = document.createElement('div');
           aiMsg.className = 'message';
-          aiMsg.innerHTML = `<span class="ai">DİO Həkim:</span> ${replyText}`;
+          aiMsg.innerHTML = `<span class="ai">DİO Həkim:</span> ${getAiResponse(text)}`;
           chatBox.appendChild(aiMsg);
           chatBox.scrollTop = chatBox.scrollHeight;
-        }, 500);
+        }, 400);
 
         chatBox.scrollTop = chatBox.scrollHeight;
         input.value = "";
