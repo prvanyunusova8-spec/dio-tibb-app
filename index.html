@@ -49,10 +49,10 @@
   <div class="card">
     <div id="chat" class="tab-content active">
       <div class="chat-box" id="chatBox">
-        <div class="message"><span class="ai">DİO Həkim:</span> Xoş gəlmisiniz! Sualınızı və ya haranızın ağrıdığını daxil edin.</div>
+        <div class="message"><span class="ai">DİO Həkim:</span> Xoş gəlmisiniz! Şikayətinizi yaza bilərsiniz (ürək, baş, mədə, diş, göz, təzyiq, oynaqlar və s.).</div>
       </div>
       <div class="input-group">
-        <input type="text" id="msgInput" placeholder="Şikayətinizi daxil edin...">
+        <input type="text" id="msgInput" placeholder="Şikayətinizi ətraflı daxil edin...">
         <button onclick="sendMessage()">Göndər</button>
       </div>
     </div>
@@ -60,18 +60,18 @@
     <div id="firstaid" class="tab-content">
       <div class="info-item emergency">
         <h4>🔥 Yüngül Yanıqlar</h4>
-        <p>10-15 dəqiqə axar soyuq su altında saxlayın. Yağ sürtməyin!</p>
+        <p>10-15 dəqiqə axar soyuq su altında saxlayın. Üzərinə yağ və ya diş məcunu sürtməyin!</p>
       </div>
       <div class="info-item emergency">
         <h4>🩸 Burun Qanaması</h4>
-        <p>Başı irəliyə əyin, burun pərələrini 5 dəqiqə sıxın.</p>
+        <p>Başı irəliyə əyin, burun pərələrini 5-10 dəqiqə sıxaraq gözləyin.</p>
       </div>
     </div>
 
     <div id="articles" class="tab-content">
       <div class="info-item">
-        <h4>💧 Su Qəbulu</h4>
-        <p>Gün ərzində ortalama 1.5 - 2 litr su içmək vacibdir.</p>
+        <h4>💧 Düzgün Su Qəbulu</h4>
+        <p>Gün ərzində ortalama 1.5 - 2 litr su içmək böyrək və maddələr mübadiləsi üçün çox vacibdir.</p>
       </div>
     </div>
   </div>
@@ -83,7 +83,7 @@
     tg.expand();
     const userName = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Pasiyent";
 
-    let lastTopic = ""; // Son mövzunu yadda saxlayır
+    let lastTopic = "";
 
     function openTab(tabName, event) {
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -95,66 +95,94 @@
     function getAiResponse(text) {
       const lower = text.toLowerCase();
 
-      // ÜRƏK VƏ DÖŞ QƏFƏSİ
+      // 1. ÜRƏK VƏ DÖŞ QƏFƏSİ
       if (lower.includes("ürək") || lower.includes("ureq") || lower.includes("urekim") || lower.includes("ureyim") || lower.includes("döş") || lower.includes("dos")) {
         lastTopic = "ureq";
-        return "🚨 <span class='alert'>TƏCİLİ DİQQƏT:</span> Ürək və ya döş qəfəsi ağrısı təcili müayinə tələb edir! Dərhal 103 Təcili Yardım çağırın. Sakit oturun, dərindən nəfəs alın, sıxıcı paltarları boşaldın və tərpənməyin.";
+        return "🚨 <span class='alert'>TƏCİLİ DİQQƏT:</span> Ürək və ya döş qəfəsi ağrısı ciddi ola bilər! Dərhal 103 Təcili Yardıma zəng edin. Sakit oturun, dərindən nəfəs alın və fiziki hərəkət etməyin.";
       }
 
-      // BAŞ AĞRISI
+      // 2. BAŞ AĞRISI VƏ BAŞGİCƏLLƏNMƏ
       if (lower.includes("baş") || lower.includes("bas")) {
         lastTopic = "bas";
-        if (lower.includes("başqa") || lower.includes("səbəb") || lower.includes("nədən")) {
-          return "Baş ağrısının digər səbəbləri: yüksək/aşağı arteriyal təzyiq, miqren, yuxusuzluq, göz yorğunluğu və ya orqanizmin susuz qalması ola bilər.";
+        if (lower.includes("gicəllənmə") || lower.includes("fırlanır")) {
+          return "Başgicəllənmə təzyiq düşməsi, susuzluq və ya qan azlığından ola bilər. Uzanan və ayaqlarınızı yüngülcə yuxarı qaldırın.";
         }
-        return "Baş ağrısı ən çox stres, gərginlik və ya susuzluqdan yaranır. İlıq su içib qaranlıq, sakit otaqda 20 dəqiqə istirahət edin.";
+        if (lower.includes("başqa") || lower.includes("səbəb") || lower.includes("nədən")) {
+          return "Baş ağrısının digər səbəbləri: yüksek/düşük təzyiq, miqren, yuxusuzluq, göz yorğunluğu və ya susuzluqdur. Davam edərsə nevroloqa müraciət edin.";
+        }
+        return "Baş ağrısı daha çox stres, yorğunluq və ya susuzluqdan yarana bilər. İlıq su içib sakit və qaranlıq otaqda istirahət edin.";
       }
 
-      // MƏDƏ VƏ HƏZM
-      if (lower.includes("mədə") || lower.includes("mede") || lower.includes("qarın") || lower.includes("qarin") || lower.includes("bulanma")) {
+      // 3. MƏDƏ, QARIN VƏ HƏZM
+      if (lower.includes("mədə") || lower.includes("mede") || lower.includes("qarın") || lower.includes("qarin") || lower.includes("bulanma") || lower.includes("göynəmə")) {
         lastTopic = "mede";
-        return "Mədə və qarın ağrısı qastrit, həzmsizlik, qaz və ya qida zəhərlənməsi ilə bağlı ola bilər. Yağlı qidalardan uzaq durun, ilıq papatya çayı içib istirahət edin.";
+        return "Mədə və qarın ağrısı qastrit, həzmsizlik, qaz və ya qida zəhərlənməsindən ola bilər. Yağlı və acı qidalardan uzaq durun, ilıq papatya və ya nanə çayı içib istirahət edin.";
       }
 
-      // QIZDIRMA VƏ QRİP
-      if (lower.includes("qızdırma") || lower.includes("qizdirma") || lower.includes("hərarət") || lower.includes("qrip") || lower.includes("soyuq dəymə")) {
+      // 4. DİŞ VƏ DAMAQ
+      if (lower.includes("diş") || lower.includes("dis") || lower.includes("damaq")) {
+        lastTopic = "dis";
+        return "Diş ağrısı zamanı duzlu ilıq su ilə qarqara etmək və ya iltihabəleyhinə ağrıkəsici istifadə etmək olar. Ən yaxın vaxtda stomatoloq müayinəsi vacibdir.";
+      }
+
+      // 5. GÖZ VƏ GÖRMƏ
+      if (lower.includes("göz") || lower.includes("goz")) {
+        lastTopic = "goz";
+        return "Gözdə sulanma, qızartı və ya ağrı ekran qarşısında çox qalmaqdan və ya infeksiyadan ola bilər. Gözləri ilıq su ilə yuyun və dincəldin.";
+      }
+
+      // 6. QULAQ AĞRISI
+      if (lower.includes("qulaq") || lower.includes("qulaqım")) {
+        lastTopic = "qulaq";
+        return "Qulaq ağrısı iltihab və ya soyuqdəymədən ola bilər. Qulağın daxilinə icazəsiz heç nə damızdırmayın, LOR həkiminə müraciət edin.";
+      }
+
+      // 7. QIZDIRMA VƏ QRİP
+      if (lower.includes("qızdırma") || lower.includes("qizdirma") || lower.includes("hərarət") || lower.includes("qrip") || lower.includes("soyuqdəymə")) {
         lastTopic = "qizdirma";
-        return "Yüksək hərarət zamanı bol maye (ilıq su, çay) qəbul edin. Hərarət 38.5°C-dən yuxarı olarsa hərarətsalıcı vasitələrdən istifadə edin və həkimə bildirin.";
+        return "Yüksək hərarət zamanı bol maye qəbul edin. Hərarət 38.5°C-dən yuxarı olarsa hərarətsalıcı həb istifadə edə bilərsiniz.";
       }
 
-      // BOĞAZ VƏ ÖSKÜRƏK
+      // 8. BOĞAZ VƏ ÖSKÜRƏK
       if (lower.includes("boğaz") || lower.includes("bogaz") || lower.includes("öskürək") || lower.includes("oskurek")) {
         lastTopic = "bogaz";
-        return "Boğaz ağrısı və öskürək üçün ən yaxşı vasitə ilıq su, bal-limon qarışığı və duzlu su ilə qarqara etməkdir.";
+        return "Boğaz ağrısı və öskürək üçün ilıq çay, bal və limon faydalıdır. Duzlu su ilə gün ərzində 3-4 dəfə qarqara edin.";
       }
 
-      // BÖYRƏK VƏ BEL
+      // 9. BÖYRƏK VƏ BEL
       if (lower.includes("böyrək") || lower.includes("boyrek") || lower.includes("bel")) {
         lastTopic = "boyrek";
-        return "Böyrək və bel ağrıları soyuqdəymə, daş/qum və ya muscle gərginliyindən yarana bilər. Bol su için və beli isti saxlayın.";
+        return "Böyrək və bel ağrıları soyuqdəymə və ya muskul gərginliyindən ola bilər. Bol su içmək və beli isti saxlamaq tövsiyə olunur.";
       }
 
-      // TƏZYİQ
+      // 10. OYNAQ VƏ ƏZƏLƏ AĞRILARI
+      if (lower.includes("oynaq") || lower.includes("diz") || lower.includes("əzələ") || lower.includes("ezele")) {
+        lastTopic = "oynaq";
+        return "Oynaq və əzələ ağrıları fiziki yorğunluq və ya revmatizmdən ola bilər. İlıq duş almaq və zədəli nahiyəni istirahət etdirmək faydalıdır.";
+      }
+
+      // 11. TƏZYİQ
       if (lower.includes("təzyiq") || lower.includes("tezyiq")) {
         lastTopic = "tezyiq";
-        return "Təzyiq dəyişməsi halsızlıq və baş ağrısı verir. Təzyiqinizi ölçün, dincəlin və duzlu qidalardan uzaq durun.";
+        return "Təzyiq dəyişməsi baş ağrısı və halsızlıq verir. Təzyiqinizi ölçün, dincəlin və duzlu qidalardan uzaq durun.";
       }
 
-      // "BAŞQA" SÖZÜ YAZILDIQDA (Konteksti başa düşür)
+      // "BAŞQA" SÖZÜ YAZILDIQDA (Əlaqəli cavablar)
       if (lower.includes("başqa") || lower.includes("neden") || lower.includes("nədən")) {
-        if (lastTopic === "ureq") return "Ürək ağrısı nəinki stresdən, həm də damar tıxanması, təzyiq və ya mədə reflüksündən də qaynaqlana bilər. Müayinə vacibdir.";
-        if (lastTopic === "mede") return "Mədə ağrısının başqa səbəbləri: helikobakter infeksiyası, öd kisəsi problemləri və ya sinir gərginliyi ola bilər.";
+        if (lastTopic === "ureq") return "Ürək ağrısı nəinki stresdən, həm də damar tıxanması, arterial təzyiq və ya mədə reflüksündən yarana bilər.";
+        if (lastTopic === "mede") return "Mədə ağrısının başqa səbəbləri: helikobakter infeksiyası, öd kisəsi problemləri və ya sinir gərginliyidir.";
+        if (lastTopic === "bas") return "Baş ağrısının digər səbəbləri: boyun osteoxondrozu, sinüs tıxanması və ya arterial təzyiq dəyişikliyidir.";
         if (lastTopic === "qizdirma") return "Qızdırma yalnız qripdən deyil, bədəndəki hər hansı bir gizli infeksiyadan da yarana bilər.";
-        return "Simptomların başqa səbəblərini öyrənmək üçün zəhmət olmasa hansı orqanınızın ağrıdığını dəqiq qeyd edin.";
+        return "Şikayətin digər səbəblərini öyrənmək üçün zəhmət olmasa hansı orqanınızın ağrıdığını qeyd edin.";
       }
 
-      // SALAMLAŞMA
-      if (lower.includes("salam") || lower.includes("sagol") || lower.includes("çox sağ ol")) {
+      // SALAMLAŞMA VƏ TƏŞƏKKÜR
+      if (lower.includes("salam") || lower.includes("sagol") || lower.includes("çox sağ ol") || lower.includes("təşəkkür")) {
         return "Salam! Sizə sağlamlıqla bağlı kömək etməkdən şadam. Başqa bir şikayətiniz var?";
       }
 
       // ÜMUMİ CAVAB
-      return "Məlumat qeydə alındı. Dəqiq tibbi kömək üçün şikayətinizi (məsələn: 'ürəyim ağrıyır', 'mədəm ağrıyır', 'bəlim ağrıyır') yazın.";
+      return "Məlumatınız qeydə alındı. Dəqiq cavab üçün şikayətinizi ətraflı yazmağınız (məsələn: 'dişim ağrıyır', 'qulağım ağrıyır', 'dizim ağrıyır') tövsiyə olunur.";
     }
 
     function sendMessage() {
