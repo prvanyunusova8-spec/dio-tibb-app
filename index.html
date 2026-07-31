@@ -6,33 +6,53 @@
   <title>DİO Tibb App</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; margin: 0; padding: 15px; color: #333; }
-    .header { text-align: center; padding: 10px 0; }
-    .header h1 { margin: 0; font-size: 20px; color: #0088cc; }
-    
-    .tabs { display: flex; gap: 4px; margin-top: 15px; }
-    .tab-btn { flex: 1; padding: 8px 4px; background: #cbd5e0; border: none; border-radius: 8px 8px 0 0; font-size: 11px; font-weight: bold; cursor: pointer; color: #2d3748; }
-    .tab-btn.active { background: #ffffff; color: #0088cc; border-bottom: 2px solid #0088cc; }
+    :root {
+      --bg-color: #f0f4f8;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --tab-bg: #cbd5e0;
+      --primary: #0088cc;
+    }
 
-    .card { background: #ffffff; border-radius: 0 0 12px 12px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
+    body.dark-mode {
+      --bg-color: #1a202c;
+      --card-bg: #2d3748;
+      --text-color: #f7fafc;
+      --tab-bg: #4a5568;
+      --primary: #63b3ed;
+    }
+
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; transition: all 0.3s ease; }
+    
+    .header { display: flex; justify-content: space-between; align-items: center; padding: 5px 0 15px 0; }
+    .header h1 { margin: 0; font-size: 18px; color: var(--primary); }
+    .theme-btn { background: none; border: 1px solid var(--primary); color: var(--text-color); padding: 5px 10px; border-radius: 12px; cursor: pointer; font-size: 12px; }
+
+    .tabs { display: flex; gap: 4px; }
+    .tab-btn { flex: 1; padding: 10px 2px; background: var(--tab-bg); border: none; border-radius: 8px 8px 0 0; font-size: 11px; font-weight: bold; cursor: pointer; color: var(--text-color); }
+    .tab-btn.active { background: var(--card-bg); color: var(--primary); border-bottom: 2px solid var(--primary); }
+
+    .card { background: var(--card-bg); border-radius: 0 0 12px 12px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 15px; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    .chat-box { height: 250px; overflow-y: auto; border: 1px solid #e2e8f0; padding: 10px; border-radius: 8px; background: #f7fafc; margin-bottom: 10px; }
+    .chat-box { height: 240px; overflow-y: auto; border: 1px solid #cbd5e0; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.02); margin-bottom: 10px; }
     .message { margin-bottom: 8px; font-size: 13px; line-height: 1.4; word-break: break-word; }
     .message .sender { font-weight: bold; color: #2b6cb0; }
     .message .ai { font-weight: bold; color: #38a169; }
     .message .alert { color: #e53e3e; font-weight: bold; }
     
     .input-group { display: flex; gap: 5px; }
-    .input-group input { flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; outline: none; }
-    .input-group button { background: #0088cc; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .input-group input { flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; outline: none; background: var(--card-bg); color: var(--text-color); }
+    .input-group button { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-    .info-item { background: #f7fafc; border-left: 4px solid #0088cc; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+    .info-item { background: rgba(0,0,0,0.03); border-left: 4px solid var(--primary); padding: 10px; margin-bottom: 10px; border-radius: 4px; }
     .emergency { border-left-color: #e53e3e; }
     .med-item { border-left-color: #38a169; }
 
-    .select-box { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e0; margin-bottom: 10px; }
+    .select-box { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e0; margin-bottom: 10px; background: var(--card-bg); color: var(--text-color); }
+
+    .contact-btn { display: inline-block; background: #25d366; color: white; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-top: 8px; }
 
     button.exit-btn { width: 100%; background: #e53e3e; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
   </style>
@@ -41,6 +61,7 @@
 
   <div class="header">
     <h1>👨‍⚕️ DİO-TİBB Məsləhətxanası</h1>
+    <button class="theme-btn" onclick="toggleTheme()">🌙 Rejim</button>
   </div>
 
   <div class="tabs">
@@ -53,25 +74,25 @@
   <div class="card">
     <div id="chat" class="tab-content active">
       <div class="chat-box" id="chatBox">
-        <div class="message"><span class="ai">DİO Həkim:</span> Xoş gəlmisiniz! Şikayətinizi (ürək, baş, mədə, göz, diş, təzyiq, oynaq və s.) ətraflı yaza bilərsiniz.</div>
+        <div class="message"><span class="ai">DİO Həkim:</span> Xoş gəlmisiniz! Şikayətinizi (ürək, baş, mədə, göz, diş, təzyiq, oynaq və s.) yaza bilərsiniz.</div>
       </div>
       <div class="input-group">
-        <input type="text" id="msgInput" placeholder="Şikayətinizi yazın...">
+        <input type="text" id="msgInput" placeholder="Şikayətinizi daxil edin...">
         <button onclick="sendMessage()">Göndər</button>
       </div>
     </div>
 
     <div id="doctor" class="tab-content">
-      <h3>Əsas Simptomunuzu Seçin:</h3>
+      <h3>Simptomunuzu Seçin:</h3>
       <select class="select-box" id="symptomSelect" onchange="findDoctor()">
         <option value="">-- Şikayəti seçin --</option>
-        <option value="cardio">Ürək sıxılması, döş qəfəsində ağrı, təngnəfəslik</option>
-        <option value="neuro">Şiddətli baş ağrısı, başgicəllənmə, uyuşma</option>
-        <option value="gastro">Mədə göynəməsi, qarın ağrısı, həzmsizlik</option>
-        <option value="ent">Boğaz ağrısı, qulaq tutulması, burun axması</option>
+        <option value="cardio">Ürək sıxılması, döş qəfəsində ağrı</option>
+        <option value="neuro">Şiddətli baş ağrısı, miqren, uyuşma</option>
+        <option value="gastro">Mədə göynəməsi, qarın ağrısı</option>
+        <option value="ent">Boğaz ağrısı, qulaq tutulması</option>
         <option value="stoma">Diş ağrısı, damaq qanaması</option>
-        <option value="ortho">Oynaq ağrıları, bel ağrısı, sümük sızlaması</option>
-        <option value="derma">Dəridə səpkilər, qızartı, kaşınma</option>
+        <option value="ortho">Oynaq, bel və sümük ağrıları</option>
+        <option value="derma">Dəridə səpki və allergik reaksiya</option>
       </select>
       <div id="doctorResult" class="info-item" style="display:none;"></div>
     </div>
@@ -80,21 +101,21 @@
       <div class="info-item med-item">
         <h4>⚠️ Dərman İstifadəsində Qızıl Qaydalar</h4>
         <p>1. Həkim resepti olmadan xüsusən <b>antibiotik</b> və kəskin ağrıkəsicilər qəbul etməyin.<br>
-        2. Dərmanları spirtli içkilər və ya qazlı sularla deyil, bol adi su ilə içənlər daha tez fayda görür.<br>
+        2. Dərmanları bol adi su ilə içmək məsləhətdir.<br>
         3. Dərmanın son istifadə tarixini mütləq yoxlayın.</p>
       </div>
       <div class="info-item med-item">
         <h4>🌿 Təbii Dəstək Məsləhətləri</h4>
         <p>• <b>Boğaz və soyuqlama:</b> İlıq bal-limonlu su, papatya çayı.<br>
         • <b>Mədə narahatlığı:</b> Nanə çayı və yağsız qidalar.<br>
-        • <b>Stres və yuxusuzluq:</b> Biti çayları (yarpız, çobanyastığı).</p>
+        • <b>Stres və yuxusuzluq:</b> Çobanyastığı və yarpız çayı.</p>
       </div>
     </div>
 
     <div id="firstaid" class="tab-content">
       <div class="info-item emergency">
         <h4>🔥 Yüngül Yanıqlar</h4>
-        <p>10-15 dəqiqə axar soyuq su altında saxlayın. Üzərinə yağ və ya diş məcunu sürtməyin!</p>
+        <p>10-15 dəqiqə axar soyuq su altında saxlayın. Yağ və ya diş məcunu sürtməyin!</p>
       </div>
       <div class="info-item emergency">
         <h4>🩸 Burun Qanaması</h4>
@@ -112,6 +133,11 @@
 
     let currentTopic = "";
 
+    // TÜND REJİM
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+    }
+
     function openTab(tabName, event) {
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -119,108 +145,88 @@
       event.currentTarget.classList.add('active');
     }
 
-    // HƏKİM TAPMA FUNKSİYASI
+    // HƏKİM VƏ ƏLAQƏ BÖLMƏSİ
     function findDoctor() {
       const val = document.getElementById('symptomSelect').value;
       const res = document.getElementById('doctorResult');
       res.style.display = 'block';
 
       if (val === 'cardio') {
-        res.innerHTML = "<h4>👨‍⚕️ Tövsiyə olunan Həkim: Kardioloq</h4><p>Ürək və qan-damar sistemi problemləri üçün Kardioloq müayinəsi vacibdir. Kəskin ağrıda 103 zəng edin.</p>";
+        res.innerHTML = "<h4>👨‍⚕️ Mütəxəssis: Kardioloq</h4><p>Ürək və qan-damar sistemi müayinəsi üçün vacibdir.</p><a href='https://t.me/telegram' class='contact-btn'>📲 Qəbula Yazıl (WhatsApp/Telegram)</a>";
       } else if (val === 'neuro') {
-        res.innerHTML = "<h4>👨‍⚕️ Tövsiyə olunan Həkim: Nevroloq</h4><p>Sinir sistemi, miqren, kəskin baş ağrıları və uyuşmalar üçün Nevroloqa müraciət edin.</p>";
+        res.innerHTML = "<h4>👨‍⚕️ Mütəxəssis: Nevroloq</h4><p>Sinir sistemi və baş ağrıları üçün Nevroloqa müraciət edin.</p><a href='https://t.me/telegram' class='contact-btn'>📲 Qəbula Yazıl (WhatsApp/Telegram)</a>";
       } else if (val === 'gastro') {
-        res.innerHTML = "<h4>👨‍⚕️ Tövsiyə olunan Həkim: Qastroenteroloq</h4><p>Mədə, bağırsaq və həzm sistemi pozuntuları üçün bu mütəxəssis müayinə etməlidir.</p>";
+        res.innerHTML = "<h4>👨‍⚕️ Mütəxəssis: Qastroenteroloq</h4><p>Mədə və həzm sistemi pozuntuları üçün bu mütəxəssis baxmalıdır.</p><a href='https://t.me/telegram' class='contact-btn'>📲 Qəbula Yazıl (WhatsApp/Telegram)</a>";
       } else if (val === 'ent') {
-        res.innerHTML = "<h4>👨‍⚕️ Tövsiyə olunan Həkim: LOR (Qulaq-Burun-Boğaz)</h4><p>Qulaq, burun, boğaz iltihabları və ağrıları üçün LOR həkiminə gedin.</p>";
+        res.innerHTML = "<h4>👨‍⚕️ Mütəxəssis: LOR (Qulaq-Burun-Boğaz)</h4><p>Boğaz və qulaq ağrıları üçün LOR həkiminə müraciət edin.</p><a href='https://t.me/telegram' class='contact-btn'>📲 Qəbula Yazıl (WhatsApp/Telegram)</a>";
       } else if (val === 'stoma') {
-        res.innerHTML = "<h4>👨‍⚕️ Tövsiyə olunan Həkim: Stomatoloq</h4><p>Diş və damaq ağrıları yalnız stomatoloji kabinetdə dəqiq müalicə olunur.</p>";
+        res.innerHTML = "<h4>👨‍⚕️ Mütəxəssis: Stomatoloq</h4><p>Diş ağrıları yalnız stomatoloji müayinə ilə həll olunur.</p><a href='https://t.me/telegram' class='contact-btn'>📲 Qəbula Yazıl (WhatsApp/Telegram)</a>";
       } else if (val === 'ortho') {
-        res.innerHTML = "<h4>👨‍⚕️ Tövsiyə olunan Həkim: Travmatoloq-Ortoped</h4><p>Oynaq, sümük və əzələ ağrıları üçün Ortoped müayinəsi məsləhətdir.</p>";
+        res.innerHTML = "<h4>👨‍⚕️ Mütəxəssis: Ortoped-Travmatoloq</h4><p>Oynaq və sümük ağrıları üçün müraciət edin.</p><a href='https://t.me/telegram' class='contact-btn'>📲 Qəbula Yazıl (WhatsApp/Telegram)</a>";
       } else if (val === 'derma') {
-        res.innerHTML = "<h4>👨‍⚕️ Tövsiyə olunan Həkim: Dermatoloq</h4><p>Dəri səpkiləri və allergiya simptomları üçün Dermatoloqa müraciət edin.</p>";
+        res.innerHTML = "<h4>👨‍⚕️ Mütəxəssis: Dermatoloq</h4><p>Dəri xəstəlikləri və səpkilər üçün müayinə vacibdir.</p><a href='https://t.me/telegram' class='contact-btn'>📲 Qəbula Yazıl (WhatsApp/Telegram)</a>";
       } else {
         res.style.display = 'none';
       }
     }
 
-    // AĞILLI VƏ ÇOXLU CAVAB VERƏN SÜNİ İNTELLEKT MƏNTİQİ
+    // AĞILLI AI MƏNTİQİ
     function getAiResponse(text) {
       const lower = text.toLowerCase();
 
-      // DƏRMAN SUALLARI
-      if (lower.includes("dərman") || lower.includes("derman") || lower.includes("həb") || lower.includes("atım") || lower.includes("içim") || lower.includes("mualice")) {
-        return "⚠️ Həkim müayinəsi və dəqiq diaqnoz olmadan özbaşına dərman içmək təhlükəlidir. 'Dərmanlar' bölməsindən ümumi qaydalarla tanış ola bilərsiniz.";
+      if (lower.includes("dərman") || lower.includes("derman") || lower.includes("həb") || lower.includes("atım")) {
+        return "⚠️ Həkim müayinəsi olmadan özbaşına dərman qəbul etmək təhlükəlidir. 'Dərmanlar' bölməsindən qaydalarla tanış olun.";
       }
 
-      // 1. ÜRƏK VƏ DÖŞ QƏFƏSİ
-      if (lower.includes("ürək") || lower.includes("ureq") || lower.includes("urekim") || lower.includes("ureyim") || lower.includes("döş") || lower.includes("dos")) {
+      if (lower.includes("ürək") || lower.includes("ureq") || lower.includes("urekim") || lower.includes("döş")) {
         currentTopic = "ureq";
-        return "🚨 <span class='alert'>TƏCİLİ DİQQƏT:</span> Ürək və döş qəfəsindəki sıxılma kardioloji risk göstəricisidir! Dərhal 103 Təcili Yardım çağırın. Sakit oturun, təşvişə düşməyin və tərpənməyin.";
+        return "🚨 <span class='alert'>TƏCİLİ DİQQƏT:</span> Ürək və döş qəfəsi ağrısı ciddi ola bilər! Dərhal 103 Təcili Yardım çağırın. Sakit oturun və tərpənməyin.";
       }
 
-      // 2. GÖZ MƏSƏLƏLƏRİ
       if (lower.includes("göz") || lower.includes("goz")) {
         currentTopic = "goz";
-        return "Gözdə olan sulanma, qızartı və ağrılar adətən kompyuter/telefon ekranına çox baxmaqdan, göz quruluğundan və ya infeksiyadan yarana bilər. Gözü ilıq su ilə yuyun və dincəldin.";
+        return "Gözdə sulanma və ya ağrı ekran yorğunluğundan və ya infeksiyadan ola bilər. Gözü ilıq su ilə yuyun və dincəldin.";
       }
 
-      // 3. BAŞ AĞRISI VƏ BAŞGİCƏLLƏNMƏ
       if (lower.includes("baş") || lower.includes("bas")) {
         currentTopic = "bas";
-        if (lower.includes("gicəllənmə") || lower.includes("fırlanır")) {
-          return "Başgicəllənmə arteriyal təzyiq dəyişikliyi, susuzluq və ya qan azlığı (anemiya) səbəbindən ola bilər. Uzanan və ayaqlarınızı yüngül yuxarı qaldırın.";
-        }
-        return "Baş ağrısının ən geniş yayılmış səbəbləri gərginlik, stres, yuxusuzluq və ya orqanizmin susuz qalmasıdır. 1-2 stəkan ilıq su içib sakin otaqda dincəlin.";
+        if (lower.includes("gicəllənmə")) return "Başgicəllənmə təzyiq düşməsi və ya susuzluqdan ola bilər. Uzanan və ayaqlarınızı yüngül yuxarı qaldırın.";
+        return "Baş ağrısı daha çox stres, yorğunluq və ya susuzluqdan yarana bilər. İlıq su içib sakin otaqda dincəlin.";
       }
 
-      // 4. MƏDƏ VƏ HƏZM
-      if (lower.includes("mədə") || lower.includes("mede") || lower.includes("qarın") || lower.includes("qarin") || lower.includes("bulanma")) {
+      if (lower.includes("mədə") || lower.includes("mede") || lower.includes("qarın") || lower.includes("bulanma")) {
         currentTopic = "mede";
-        return "Mədə və qarın nahiyəsində olan narahatlıqlar qastrit, həzmsizlik, qaz toplanması və ya qida qəbulu ilə bağlı ola bilər. Yağlı və acı qidalardan uzaq durun.";
+        return "Mədə narahatlığı qastrit, həzmsizlik və ya qida qəbulu ilə bağlıdır. Yağlı qidalardan uzaq durun, ilıq çay içib dincəlin.";
       }
 
-      // 5. DİŞ AĞRISI
-      if (lower.includes("diş") || lower.includes("dis") || lower.includes("damaq")) {
+      if (lower.includes("diş") || lower.includes("dis")) {
         currentTopic = "dis";
-        return "Diş ağrısı sinir iltihabı və ya karieslə bağlıdır. Müvəqqəti olaraq ilıq duzlu su ilə qarqara etmək olar. Stomatoloq müayinəsi mütləqdir.";
+        return "Diş ağrısı zamanı ilıq duzlu su ilə qarqara edə bilərsiniz. Dəqiq müalicə üçün stomatoloq mütləqdir.";
       }
 
-      // 6. QIZDIRMA VƏ QRİP
-      if (lower.includes("qızdırma") || lower.includes("qizdirma") || lower.includes("hərarət") || lower.includes("qrip")) {
+      if (lower.includes("qızdırma") || lower.includes("qizdirma") || lower.includes("qrip")) {
         currentTopic = "qizdirma";
-        return "Hərarət yüksəldikdə bədən infeksiya ilə mübarizə aparır. Bol maye (ilıq çay, su) qəbul edin. 38.5°C-dən yuxarı olarsa həkim tövsiyəli hərarətsalıcı istifadə edin.";
+        return "Hərarət yüksəldikdə bol maye qəbul edin. 38.5°C-dən yuxarı olarsa həkim tövsiyəsi ilə hərarətsalıcı istifadə edin.";
       }
 
-      // 7. BOĞAZ VƏ ÖSKÜRƏK
-      if (lower.includes("boğaz") || lower.includes("bogaz") || lower.includes("öskürək") || lower.includes("oskurek")) {
+      if (lower.includes("boğaz") || lower.includes("bogaz") || lower.includes("öskürək")) {
         currentTopic = "bogaz";
-        return "Boğaz ağrısı və öskürək viral infeksiya əlamətidir. İlıq bal-limonlu çay içmək və duzlu su ilə qarqara etmək boğazı rahatladacaq.";
+        return "Boğaz ağrısı üçün ilıq bal-limonlu çay içmək və duzlu su ilə qarqara etmək tövsiyə olunur.";
       }
 
-      // 8. TƏZYİQ
-      if (lower.includes("təzyiq") || lower.includes("tezyiq")) {
-        currentTopic = "tezyiq";
-        return "Təzyiq dəyişməsi halsızlıq, başda ağırlıq verir. Təzyiqinizi tonometr gətirib ölçün, uzanın və duzlu qidalardan uzaq durun.";
+      if (lower.includes("başqa") || lower.includes("neden") || lower.includes("səbəb")) {
+        if (currentTopic === "goz") return "Göz narahatlığının digər səbəbləri: göz daxili təzyiq, allergiya və ya görmə zəifliyi ola bilər.";
+        if (currentTopic === "ureq") return "Ürək nahiyəsindəki ağrılar nəinki kardioloji, həm də sinir ağrısı, boyun osteoxondrozu və ya reflüksdən yarana bilər.";
+        if (currentTopic === "bas") return "Baş ağrısının digər səbəbləri: miqren, arterial təzyiq dəyişikliyi və ya sinüzitdir.";
+        if (currentTopic === "mede") return "Mədə ağrısının digər səbəbləri: Helikobakter infeksiyası və ya öd kisəsi problemləridir.";
+        return "Digər səbəblər üçün narahat olan orqanı qeyd edin.";
       }
 
-      // "BAŞQA" / "NƏDƏN OLA BİLƏR" (Mükəmməl kontekst cavabları)
-      if (lower.includes("başqa") || lower.includes("neden") || lower.includes("nədən") || lower.includes("səbəb")) {
-        if (currentTopic === "goz") return "Göz narahatlığının digər səbəbləri: göz daxili təzyiq (qlaukoma), allergiya və ya astiqmatizm ola bilər. Oftalmoloq müayinəsi tövsiyə edilir.";
-        if (currentTopic === "ureq") return "Ürək nahiyəsindəki ağrılar nəinki kardioloji, həm də nevrallgiya (əzələ/sinir ağrısı), boyun osteoxondrozu və ya mədə reflüksündən yarana bilər.";
-        if (currentTopic === "bas") return "Baş ağrısının digər səbəbləri: miqren tutmaları, arterial təzyiq, göz yorğunluğu və ya sinüzitdir.";
-        if (currentTopic === "mede") return "Mədə ağrısının digər səbəbləri: Helikobakter Pylori infeksiyası, öd kisəsi daşları və ya sinir gərginliyidir.";
-        if (currentTopic === "qizdirma") return "Qızdırmanın başqa səbəbi bədəndə olan hər hansı gizli iltihab ocağı ola bilər.";
-        
-        return "Digər səbəbləri dəqiq öyrənmək üçün hansı orqanınızın ağrıdığını (göz, baş, mədə və s.) qeyd edin.";
+      if (lower.includes("salam") || lower.includes("sagol") || lower.includes("təşəkkür")) {
+        return "Salam! Sizə yardım etməkdən memnunam. Başqa hansı şikayətiniz var?";
       }
 
-      // SALAM VƏ TƏŞƏKKÜR
-      if (lower.includes("salam") || lower.includes("sagol") || lower.includes("sağ ol") || lower.includes("təşəkkür")) {
-        return "Salam! Sizə tibbi məsləhətlərlə kömək etməkdən memnunam. Başqa hansı şikayətiniz var?";
-      }
-
-      return "Şikayətiniz qeydə alındı. Dəqiq tibbi kömək üçün narahatlığınızı ətraflı yazmağınız (məsələn: 'başım ağrıyır', 'mədəmdə göynəmə var') xahiş olunur.";
+      return "Şikayətiniz qeydə alındı. Dəqiq cavab üçün narahatlığınızı ətraflı yazın (məsələn: 'başım ağrıyır', 'mədəmdə göynəmə var').";
     }
 
     function sendMessage() {
