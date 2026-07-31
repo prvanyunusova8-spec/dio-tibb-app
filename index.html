@@ -36,7 +36,7 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    .chat-box { height: 260px; overflow-y: auto; border: 1px solid #cbd5e0; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.02); margin-bottom: 10px; }
+    .chat-box { height: 270px; overflow-y: auto; border: 1px solid #cbd5e0; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.02); margin-bottom: 10px; }
     .message { margin-bottom: 8px; font-size: 13px; line-height: 1.4; word-break: break-word; }
     .message .sender { font-weight: bold; color: #2b6cb0; }
     .message .ai { font-weight: bold; color: #38a169; }
@@ -73,10 +73,10 @@
   <div class="card">
     <div id="chat" class="tab-content active">
       <div class="chat-box" id="chatBox">
-        <div class="message"><span class="ai">DİO Həkim:</span> Xoş gəlmisiniz! İxtiyari tibbi mövzuda (ürək, baş, mədə, göz, diş, təzyiq, stres və s.) sualınızı verə bilərsiniz.</div>
+        <div class="message"><span class="ai">DİO Həkim:</span> Xoş gəlmisiniz! Şikayətlərinizi yaza və ya akademiki tibbi biliklər (Anatomiya, Fiziologiya, Farmakologiya, İnfeksiyalar və s.) haqqında suallarınızı verə bilərsiniz.</div>
       </div>
       <div class="input-group">
-        <input type="text" id="msgInput" placeholder="Sualınızı daxil edin...">
+        <input type="text" id="msgInput" placeholder="Şikayət və ya sualınızı daxil edin...">
         <button onclick="sendMessage()">Göndər</button>
       </div>
     </div>
@@ -90,8 +90,6 @@
         <option value="gastro">Mədə göynəməsi, qarın ağrısı</option>
         <option value="ent">Boğaz ağrısı, qulaq tutulması</option>
         <option value="stoma">Diş ağrısı, damaq qanaması</option>
-        <option value="ortho">Oynaq, bel və sümük ağrıları</option>
-        <option value="derma">Dəridə səpki və allergik reaksiya</option>
       </select>
       <div id="doctorResult" class="info-item" style="display:none;"></div>
     </div>
@@ -100,8 +98,7 @@
       <div class="info-item med-item">
         <h4>⚠️ Dərman İstifadəsində Qızıl Qaydalar</h4>
         <p>1. Həkim resepti olmadan xüsusən <b>antibiotik</b> qəbul etməyin.<br>
-        2. Dərmanları bol adi su ilə içmək məsləhətdir.<br>
-        3. Son istifadə tarixini mütləq yoxlayın.</p>
+        2. Dərmanları bol adi su ilə içmək məsləhətdir.</p>
       </div>
     </div>
 
@@ -144,62 +141,79 @@
       else res.style.display = 'none';
     }
 
+    // AĞILLI VƏ TİBBİ BİLİKLƏRİ ƏHATƏ EDƏN AI MƏNTİQİ
     function getAiResponse(text) {
       const lower = text.toLowerCase();
 
-      // 1. ÖNCƏ "BAŞQA" SÖZÜNÜ YOXLAYIRIQ (Baş ağrısı ilə qarışmasın deyə!)
+      // 1. "BAŞQA" SÖZÜ DƏQİQLƏŞDİRMƏSİ
       if (lower.includes("başqa") || lower.includes("neden") || lower.includes("səbəb") || lower.includes("əlavə")) {
-        if (currentTopic === "goz") {
-          return "Göz problemlərinin digər səbəbləri: göz təzyiqi (qlaukoma), allergiya, astiqmatizm və ya vitamin A çatışmazlığı ola bilər. Oftalmoloq müayinəsi tövsiyə edilir.";
-        }
-        if (currentTopic === "ureq") {
-          return "Ürək nahiyəsindəki ağrılar nəinki kardioloji, həm də nevrallgiya, boyun osteoxondrozu və ya mədə reflüksündən yarana bilər.";
-        }
-        if (currentTopic === "bas") {
-          return "Baş ağrısının digər səbəbləri: miqren tutmaları, yüksək təzyiq, göz yorğunluğu və ya sinüzitdir.";
-        }
-        if (currentTopic === "mede") {
-          return "Mədə ağrısının digər səbəbləri: Helikobakter infeksiyası, öd kisəsi problemləri və ya sinir gərginliyidir.";
-        }
-        return "Narahatlıq hiss etdiyiniz orqanın adını yazın, onun haqqında digər səbəbləri bildirim.";
+        if (currentTopic === "goz") return "Göz problemlərinin digər səbəbləri: göz daxili təzyiq (qlaukoma), allergiya, astiqmatizm və A vitamini çatışmazlığı ola bilər.";
+        if (currentTopic === "ureq") return "Ürək nahiyəsindəki ağrılar nəinki kardioloji, həm də nevralgiya, boyun osteoxondrozu və ya reflüksdən yarana bilər.";
+        if (currentTopic === "bas") return "Baş ağrısının digər səbəbləri: miqren tutmaları, yüksək təzyiq, göz yorğunluğu və ya sinüzitdir.";
+        if (currentTopic === "mede") return "Mədə ağrısının digər səbəbləri: Helikobakter Pylori infeksiyası, öd kisəsi daşları və ya sinir gərginliyidir.";
+        return "İstədiyiniz organ və ya tibbi mövzu haqqında dəqiqləşdirmə qeyd edin.";
       }
 
-      // 2. GÖZ MƏSƏLƏLƏRİ
+      // 2. TİBB UNİVERSİTETİ / TƏHSİL VƏ AKADEMİK TİBBİ BİLİKLƏR
+      if (lower.includes("anatomiya") || lower.includes("orqanlar") || lower.includes("bədən")) {
+        return "📘 <b>Anatomiya Bilgisi:</b> İnsan bədəni 206 sümükdən və 600-dən çox əzələdən ibarətdir. Əsas heyati organlar (ürək, ağciyər, qaraciyər, böyrək, beyin) bədənin metabolik və həyati funksiyalarını idarə edir.";
+      }
+
+      if (lower.includes("fiziologiya") || lower.includes("qan dövranı") || lower.includes("nəfəs")) {
+        return "🔬 <b>Fiziologiya Bilgisi:</b> Ürək gün ərzində ortalama 100,000 dəfə döyünərək qanı damarlarla bütün hüceyrələrə daşıyır. Oksigen böyrək, beyin və toxumalara eritrositlərlə çatdırılır.";
+      }
+
+      if (lower.includes("farmakologiya") || lower.includes("dərman necə") || lower.includes("tesir")) {
+        return "💊 <b>Farmakologiya Bilgisi:</b> Dərmanlar qan dövranına sorulduqdan sonra reseptorlara bağlanaraq təsir göstərir. Antibiotiklər bakteriyaları məhv edir, ağrıkəsicilər isə beyinə gedən ağrı siqnallarını bloklayır.";
+      }
+
+      if (lower.includes("infeksiya") || lower.includes("bakteriya") || lower.includes("virus")) {
+        return "🦠 <b>Mikrobiologiya:</b> İnfeksiyalar virus, bakteriya və ya göbələklərlə yaranır. Viruslara antibiotik təsir etmir, immun sistem tərəfindən məhv edilir.";
+      }
+
+      if (lower.includes("patologiya") || lower.includes("xəstəlik necə")) {
+        return "🩺 <b>Patologiya Bilgisi:</b> Xəstəliklər hüceyrə səviyyəsində zədələnmə və iltihab reaksiyası ilə başlayır. İmmun sistem zədələnmiş toxumanı bərpa etməyə çalışarkən ağrı və qızartı yaranır.";
+      }
+
+      // 3. SİMPTOMLAR VƏ ŞİKAYƏTLƏR
       if (lower.includes("göz") || lower.includes("goz")) {
         currentTopic = "goz";
-        return "Gözdə olan sulanma, qızartı və ya ağrılar çox vaxt kompyuter/telefon ekranına çox baxmaqdan, göz quruluğundan və ya infeksiyadan yarana bilər. Gözü ilıq su ilə yuyun və dincəldin.";
+        return "Gözdə olan sulanma, qızartı və ya ağrılar çox vaxt ekran yorğunluğu, göz quruluğu və ya infeksiyadan yarana bilər. Gözü ilıq su ilə yuyun və dincəldin.";
       }
 
-      // 3. ÜRƏK VƏ DÖŞ QƏFƏSİ
       if (lower.includes("ürək") || lower.includes("ureq") || lower.includes("urekim") || lower.includes("döş")) {
         currentTopic = "ureq";
-        return "🚨 <span class='alert'>TƏCİLİ DİQQƏT:</span> Ürək və döş qəfəsi ağrısı ciddi ola bilər! Dərhal 103 Təcili Yardıma zəng edin.";
+        return "🚨 <span class='alert'>TƏCİLİ DİQQƏT:</span> Ürək və döş qəfəsi ağrısı kəskin kardioloji riskdir! Dərhal 103 Təcili Yardıma zəng edin.";
       }
 
-      // 4. BAŞ VƏ MİQREN (YALNIZ "başqa" SÖZÜ YOXDURSA BURAYA DÜŞÜR!)
       if (lower.includes("baş") || lower.includes("bas")) {
         currentTopic = "bas";
-        if (lower.includes("gicəllənmə")) return "Başgicəllənmə təzyiq düşməsi və ya susuzluqdan ola bilər.";
-        return "Baş ağrısı daha çox stres, yorğunluq, yuxusuzluq və ya susuzluqdan yarana bilər. 1-2 stəkan ilıq su içib dincəlin.";
+        if (lower.includes("gicəllənmə")) return "Başgicəllənmə təzyiq düşməsi, susuzluq və ya anemiya səbəbindən ola bilər.";
+        return "Baş ağrısı gərginlik, stres, yuxusuzluq və ya susuzluqdan yarana bilər. İlıq su içib sakin otaqda dincəlin.";
       }
 
-      // 5. MƏDƏ VƏ HƏZM
       if (lower.includes("mədə") || lower.includes("mede") || lower.includes("qarın") || lower.includes("bulanma")) {
         currentTopic = "mede";
-        return "Mədə və qarın narahatlığı qastrit, həzmsizlik və ya qida zəhərlənməsindən ola bilər. Yağlı qidalardan uzaq durun.";
+        return "Mədə narahatlığı qastrit, həzmsizlik və ya qida qəbulu ilə bağlıdır. Yağlı qidalardan uzaq durun, ilıq çay içib dincəlin.";
       }
 
-      // 6. DƏRMAN SUALLARI
+      if (lower.includes("diş") || lower.includes("dis")) {
+        return "Diş ağrısı karies və ya sinir iltihabı ilə bağlı olur. Müvəqqəti duzlu su ilə qarqara edə bilərsiniz.";
+      }
+
+      if (lower.includes("qızdırma") || lower.includes("qizdirma") || lower.includes("qrip")) {
+        return "Yüksək hərarət zamanı bol maye qəbul edin. 38.5°C-dən yuxarı olarsa həkim tövsiyəsi ilə hərarətsalıcı istifadə edə bilərsiniz.";
+      }
+
       if (lower.includes("dərman") || lower.includes("derman") || lower.includes("həb") || lower.includes("atım")) {
-        return "⚠️ Həkim müayinəsi olmadan özbaşına dərman qəbul etmək təhlükəlidir.";
+        return "⚠️ Həkim müayinəsi olmadan özbaşına dərman qəbul etmək orqanizmə zərər verə bilər.";
       }
 
-      // SALAMLAŞMA VƏ TƏŞƏKKÜR
       if (lower.includes("salam") || lower.includes("sagol") || lower.includes("təşəkkür")) {
-        return "Salam! Sizə kömək etməkdən memnunam. Başqa hansı sualınız var?";
+        return "Salam! Sizə tibbi və akademik məsələlərdə kömək etməkdən memnunam. Sualınızı yazın!";
       }
 
-      return "Məlumat qeydə alındı. Dəqiq cavab üçün narahatlığınızı ətraflı yazmağınız (məsələn: 'gözüm ağrıyır', 'mədəmdə göynəmə var') tövsiyə olunur.";
+      return "Sualınız qeydə alındı. Həm simptomlar, həm də tibbi dərslik bilikləri (anatomiya, fiziologiya, dərmanlar və s.) haqqında ətraflı soruşa bilərsiniz.";
     }
 
     function sendMessage() {
